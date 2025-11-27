@@ -79,3 +79,40 @@ BLR-Riders/
 │   │   └── services/
 │   └── requirements.txt
 └── docs/                 # Diagrams, reports, documentation
+
+BLR-Riders/
+│
+├── .github/                  # GitHub specific files
+│   └── workflows/           # GitHub Actions workflows
+│
+├── blr_riders/              # Main package
+│   ├── __init__.py
+│   ├── config/              # Configuration files
+│   │   ├── __init__.py
+│   │   └── settings.py
+│   │
+│   ├── app/                 # Main application code
+│   │   ├── __init__.py
+│   │   ├── models/         # Database models
+│   │   ├── routes/         # API/View routes
+│   │   ├── services/       # Business logic
+│   │   └── utils/          # Helper functions
+│   │
+│   └── tests/              # Test files
+│       ├── __init__.py
+│       ├── unit/
+│       └── integration/
+│
+├── docs/                    # Documentation
+│   ├── api.md
+│   └── setup.md
+│
+├── scripts/                # Utility scripts
+│   ├── setup.sh
+│   └── deploy.sh
+│
+├── .env.example           # Example environment variables
+├── .gitignore            # Already created
+├── requirements.txt      # Python dependencies
+├── README.md            # Project documentation
+└── setup.py             # Package setup file
