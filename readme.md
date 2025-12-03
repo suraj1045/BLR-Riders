@@ -1,6 +1,6 @@
 # 🏍️ BLR Riders – Intelligent Rider Companion App
 
-BLR Riders is a cross-domain mobile application designed for motorcycle riders, focused on **group ride coordination, safety, learning, and community building**.  
+BLR Riders is a cross-platform application designed for motorcycle riders, focused on **group ride coordination, safety, learning, and community building**.  
 It brings together **ride planning, real-time GPS tracking, AI-based assistance, rider education, and community features** into a single unified platform.
 
 ---
@@ -29,9 +29,111 @@ It brings together **ride planning, real-time GPS tracking, AI-based assistance,
 
 ## 🧱 Tech Stack
 
-**Frontend (Mobile App)**  
-- Flutter (Dart)  
-- Google Maps SDK / Mapbox  
+### Frontend (Web App)
+- Streamlit (Python) - For rapid UI development
+- Leaflet.js - For interactive maps (free and open-source)
+- WebSockets - For real-time updates
+
+### Backend
+- FastAPI - Modern, fast web framework for APIs
+- PostgreSQL - Relational database
+- SQLAlchemy - ORM for database operations
+- WebSockets - For real-time communication
+- JWT - For authentication
+
+### AI & Services
+- Rule-based chatbot with OpenAI API (free tier)
+- Mapbox GL JS - For turn-by-turn navigation (free tier available)
+
+### Infrastructure
+- Supabase - For database hosting and authentication
+- GitHub Actions - For CI/CD pipelines
+- Docker - For containerization
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Python 3.9+
+- PostgreSQL
+- Node.js (for some frontend dependencies)
+- Docker (optional)
+
+### Local Development Setup
+1. Clone the repository
+2. Set up a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: .\venv\Scripts\activate
+   ```
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Set up environment variables (create a `.env` file):
+   ```
+   DATABASE_URL=postgresql://user:password@localhost:5432/blr_riders
+   SECRET_KEY=your-secret-key
+   MAPBOX_ACCESS_TOKEN=your-mapbox-token
+   ```
+5. Run database migrations:
+   ```bash
+   alembic upgrade head
+   ```
+6. Start the development server:
+   ```bash
+   uvicorn app.main:app --reload
+   ```
+7. Start the Streamlit frontend:
+   ```bash
+   streamlit run frontend/app.py
+   ```
+
+---
+
+## 📂 Project Structure
+
+```
+blr-riders/
+├── backend/               # FastAPI backend
+│   ├── app/               
+│   │   ├── api/          # API routes
+│   │   ├── core/         # Core configurations
+│   │   ├── db/           # Database models and migrations
+│   │   ├── schemas/      # Pydantic models
+│   │   └── services/     # Business logic
+│   ├── tests/            # Backend tests
+│   └── requirements.txt  # Python dependencies
+│
+├── frontend/             # Streamlit frontend
+│   ├── app.py           # Main Streamlit app
+│   ├── components/      # Reusable UI components
+│   └── assets/          # Static files
+│
+├── .github/              # GitHub Actions workflows
+├── docker/               # Docker configurations
+├── .env.example         # Example environment variables
+└── README.md            # This file
+```
+
+---
+
+## 🛠️ Development Workflow
+
+1. Create a new branch for your feature:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+2. Make your changes and commit them
+3. Push to the branch and create a pull request
+4. After code review, merge to `main`
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 - Firebase Auth, Firestore, Cloud Storage, (optional: Realtime Database)
 
 **Backend (API Layer)**  
