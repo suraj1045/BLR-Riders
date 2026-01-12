@@ -1,42 +1,18 @@
 import streamlit as st
-import requests
-import os
-from dotenv import load_dotenv
+from utils import make_authenticated_request
 
-# Load environment variables
-load_dotenv()
-
-# API configuration
-API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
+from components.navbar import render_navbar
 
 # Page configuration
-st.set_page_config(page_title="BLR Riders - API Tester", layout="wide")
+st.set_page_config(page_title="BLR Riders", layout="wide", page_icon="🏍️")
 
-# Session state to store authentication status
+# Render Top Navbar
+render_navbar()
+
+# Session state initialization
 if 'token' not in st.session_state:
     st.session_state.token = None
     st.session_state.user = None
-
-def make_authenticated_request(method, endpoint, data=None):
-    headers = {}
-    if st.session_state.token:
-        headers["Authorization"] = f"Bearer {st.session_state.token}"
-    
-    url = f"{API_BASE_URL}{endpoint}"
-    
-    try:
-        if method == 'GET':
-            response = requests.get(url, headers=headers)
-        elif method == 'POST':
-            response = requests.post(url, json=data, headers=headers)
-        
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        st.error(f"Error: {str(e)}")
-        if hasattr(e, 'response') and e.response:
-            st.error(f"Response: {e.response.text}")
-        return None
 
 def login():
     with st.form("login_form"):
@@ -51,11 +27,14 @@ def login():
                 '/api/v1/auth/login',
                 data={"username": email, "password": password}
             )
-            if response:
-                st.session_state.token = response.get('access_token')
+            if response and response.status_code == 200:
+                data = response.json()
+                st.session_state.token = data.get('access_token')
                 st.session_state.user = email
                 st.success("Successfully logged in!")
                 st.rerun()
+            else:
+                st.error("Login failed. Please check your credentials.")
 
 def register():
     with st.form("register_form"):
@@ -75,27 +54,10 @@ def register():
                 '/api/v1/auth/register',
                 data={"email": email, "password": password}
             )
-            if response:
+            if response and response.status_code == 200:
                 st.success("Successfully registered! Please login.")
-
-def user_profile():
-    st.subheader("User Profile")
-    if st.button("Get My Profile"):
-        response = make_authenticated_request('GET', '/api/v1/auth/me')
-        if response:
-            st.json(response)
-
-def health_check():
-    st.subheader("Health Check")
-    if st.button("Check API Health"):
-        try:
-            response = requests.get(f"{API_BASE_URL}/api/healthcheck")
-            if response.status_code == 200:
-                st.success(f"API is healthy: {response.json()}")
             else:
-                st.error(f"API returned status code: {response.status_code}")
-        except Exception as e:
-            st.error(f"Error connecting to API: {str(e)}")
+                st.error("Registration failed.")
 
 def logout():
     st.session_state.token = None
@@ -103,37 +65,24 @@ def logout():
     st.success("Successfully logged out!")
     st.rerun()
 
-# Main app
 def main():
-    st.title("🚴 BLR Riders - API Tester")
-    
-    # Sidebar for navigation
-    st.sidebar.title("Navigation")
+    st.title("🏍️ BLR Riders - Home")
     
     if st.session_state.token:
-        st.sidebar.success(f"Logged in as {st.session_state.user}")
-        if st.sidebar.button("Logout"):
-            logout()
+        st.success(f"Welcome back, {st.session_state.user}!")
+        st.info("Use the sidebar functionality to explore Rides, Learning, and the Chatbot.")
         
-        menu = ["User Profile", "Health Check"]
-        choice = st.sidebar.selectbox("Menu", menu)
-        
-        if choice == "User Profile":
-            user_profile()
-        elif choice == "Health Check":
-            health_check()
+        # Logout logic is now handled in the Navbar
+        st.info("Explore features using the top navigation bar.")
             
     else:
-        menu = ["Login", "Register"]
-        choice = st.sidebar.selectbox("Menu", menu)
+        tab1, tab2 = st.tabs(["Login", "Register"])
         
-        if choice == "Login":
+        with tab1:
             login()
-        elif choice == "Register":
-            register()
         
-        # Always show health check in the main area when not logged in
-        health_check()
+        with tab2:
+            register()
 
 if __name__ == "__main__":
     main()

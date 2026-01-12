@@ -11,6 +11,8 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # Import your models and Base
 from app.db.base import Base
 from app.models.user import User  # noqa
+from app.models.ride import Ride
+from app.models.learning import LearningModule
 
 # This is the Alembic Config object
 config = context.config

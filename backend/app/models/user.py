@@ -18,7 +18,7 @@ class User(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationships
-    # rides = relationship("Ride", back_populates="host")
+    rides = relationship("Ride", back_populates="organizer")
     # ride_participations = relationship("RideParticipant", back_populates="user")
 
     def __repr__(self):
